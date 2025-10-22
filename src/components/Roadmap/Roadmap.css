@@ -1,0 +1,166 @@
+/* wrapper background */
+.timeline-wrap {
+  background: #0e0e10; /* grey.900 */
+  padding: clamp(2rem, 4vw, 3rem) 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+}
+
+/* inner panel */
+.timeline {
+  background: #1a1b20; /* grey.800 */
+  border-radius: 16px;
+  padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+/* the grid track with alternating rows */
+.timeline__outer {
+  position: relative;
+}
+
+/* one row per item; holds card and the curved line via ::before */
+.timeline__row {
+  position: relative;
+  max-width: 480px;
+  margin-inline: auto;
+  padding-block: 1.25rem; /* space for the line rounding */
+  display: flex;
+}
+
+.timeline__row.left {
+  justify-content: flex-start;
+  padding-left: 1rem;
+}
+.timeline__row.right {
+  justify-content: flex-end;
+  padding-right: 1rem;
+}
+
+/* curved line: use half-width border box with rounded corners */
+.timeline__row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 50%;
+  top: 0;
+  bottom: 0;
+  border-style: solid;
+  border-width: 5px;
+  border-color: var(--line, #5e6ac4);
+  pointer-events: none;
+}
+
+/* left side curve */
+.timeline__row.left::before {
+  left: 0;
+  right: unset;
+  border-right-color: transparent;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-top-width: var(--cut-top, 5px);
+  border-bottom-width: var(--cut-bottom, 5px);
+}
+
+/* right side curve */
+.timeline__row.right::before {
+  right: 0;
+  left: unset;
+  border-left-color: transparent;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  border-top-width: var(--cut-top, 5px);
+  border-bottom-width: var(--cut-bottom, 5px);
+}
+
+/* card */
+.timeline__card {
+  width: 100%;
+  background: #1f2129; /* grey.800 variant */
+  border: 1px solid #2b2d36; /* grey.700 */
+  border-radius: 12px;
+  color: #c7c9d1; /* grey.300 */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.card__content {
+  padding: clamp(1rem, 3vw, 1.25rem);
+  position: relative;
+}
+
+/* step badge + dot on line */
+.card__step {
+  display: inline-block;
+  color: var(--line, #5e6ac4);
+  letter-spacing: 0.06em;
+  font-weight: 800;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.timeline__row.left .card__step::before,
+.timeline__row.right .card__step::before {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #fff;
+  border: 3px solid var(--line, #5e6ac4);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.timeline__row.left .card__step::before {
+  left: -36px;
+}
+.timeline__row.right .card__step::before {
+  right: -36px;
+}
+
+/* title, subtitles */
+.card__title {
+  color: var(--line, #5e6ac4);
+  margin: 0.1rem 0 0.35rem;
+  font-size: clamp(1.05rem, 2.6vw, 1.15rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.card__subtitle {
+  color: #9aa0ad; /* grey.400 */
+  margin: 0 0 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.card__text {
+  margin: 0 0 0.6rem 0;
+}
+
+.card__cause {
+  color: #7b8090; /* grey.500 */
+  font-style: italic;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* right aligned helpers */
+.align-right {
+  text-align: right;
+}
+
+/* tiny widths tweak (όπως στο @media που είχες) */
+@media (max-width: 400px) {
+  .timeline__row::before {
+    top: -5px;
+    bottom: -5px;
+  }
+}

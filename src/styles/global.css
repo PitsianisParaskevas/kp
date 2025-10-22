@@ -1,0 +1,17 @@
+/* src/styles/global.css */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: Inter, system-ui, Arial;
+  color: var(--text-900, #0f172a);
+  background-color: #fff;
+}

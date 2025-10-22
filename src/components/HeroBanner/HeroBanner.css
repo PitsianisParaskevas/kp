@@ -1,0 +1,98 @@
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: var(--hero-min-height, 80vh);
+  color: var(--brand-on-primary, #ffffff);
+  background-color: var(--brand-primary, #5e6ac4);
+  background-image: var(
+      --hero-gradient,
+      linear-gradient(
+        to right,
+        rgba(94, 106, 196, 1) 40%,
+        rgba(94, 106, 196, 0.85) 60%
+      )
+    ),
+    var(--hero-image);
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: contain;
+  overflow: hidden;
+}
+
+/* optional: container width here or keep your global .container */
+.hero__container {
+  width: min(1120px, 100% - var(--container-padding-x, 1.25rem) * 2);
+  margin-inline: auto;
+  padding-inline: var(--container-padding-x, 1.25rem);
+}
+
+.hero__content {
+  max-width: 56ch;
+  padding-block: 4rem; /* balanced top/bottom spacing */
+}
+
+.hero__content h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.2;
+  margin: 0 0 0.75rem;
+}
+
+.hero__subtitle {
+  color: var(--text-on-dark, rgba(255, 255, 255, 0.9));
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  line-height: 1.5;
+  margin: 0 0 1.5rem;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.hero__cta {
+  display: inline-block;
+  background-color: #1f2755ff; /* ίδιο με το sx σου */
+  color: #fff;
+  font-weight: 700;
+  padding: 0.8rem 1.25rem;
+  border-radius: var(--radius-xl, 1rem);
+  box-shadow: var(--shadow-md, 0 10px 25px rgba(0, 0, 0, 0.15));
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hero__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+.hero__credit {
+  position: absolute;
+  bottom: 10px;
+  right: 16px;
+  color: var(--text-on-dark-muted, rgba(255, 255, 255, 0.75));
+  font-size: 0.75rem;
+}
+
+/* Responsive: push image rightward on smaller screens */
+@media (max-width: 900px) {
+  .hero {
+    background-position: 125% center;
+    background-size: 800px auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    background-position: 150% center;
+    background-size: 650px auto;
+  }
+  .hero__actions {
+    justify-content: center;
+  }
+  .hero__content {
+    text-align: center;
+    margin-inline: auto;
+  }
+}
