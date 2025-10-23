@@ -1,51 +1,55 @@
 $ErrorActionPreference = "Stop"
 
-# === CONFIGURATION ===
+# === CONFIG ===
 $DEPLOY_BRANCH = "deploy"
 $BUILD_DIR = "dist"
 $MAIN_BRANCH = "main"
 
 Write-Host ""
-Write-Host "🚀 Starting deployment for GitHub Pages..."
+Write-Host "Starting deployment for GitHub Pages..."
 Write-Host "------------------------------------------"
 
-# === STEP 1: Build the project ===
-Write-Host "🏗️  Building project..."
+# 1) Build (τρέχεις το script από το main)
+Write-Host "Building project..."
 npm run build
 
-# === STEP 2: Switch to deploy branch ===
-Write-Host "🪄 Switching to branch $DEPLOY_BRANCH..."
+# 2) Checkout deploy
+Write-Host "Switching to branch $DEPLOY_BRANCH..."
 git checkout $DEPLOY_BRANCH
 
-# === STEP 3: Clean old files ===
-Write-Host "🧹 Cleaning old files..."
-Get-ChildItem -Force | Where-Object { $_.Name -notin @('.git') } | Remove-Item -Recurse -Force
-
-# === STEP 4: Copy new build ===
-Write-Host "📦 Copying new build files..."
-Copy-Item -Recurse -Force "../$BUILD_DIR/*" .
-
-# === STEP 5: Add .nojekyll ===
-Write-Host "📘 Adding .nojekyll file..."
-New-Item -ItemType File -Force -Name ".nojekyll" | Out-Null
-
-# === STEP 6: Commit and push ===
-Write-Host "📤 Committing and pushing to $DEPLOY_BRANCH..."
-git add -A
-if (git diff --cached --quiet) {
-  Write-Host "ℹ️  No changes to deploy."
-} else {
-  $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss UTC"
-  git commit -m "Deploy $timestamp"
-  git push origin $DEPLOY_BRANCH
+# Safety: επιβεβαίωση ότι όντως είμαστε στο deploy
+$currentBranch = git rev-parse --abbrev-ref HEAD
+if ($currentBranch -ne $DEPLOY_BRANCH) {
+    Write-Host "ERROR: Not on $DEPLOY_BRANCH. Aborting."
+    git checkout $MAIN_BRANCH
+    exit 1
 }
 
-# === STEP 7: Return to main branch ===
-Write-Host "↩️  Returning to $MAIN_BRANCH..."
+# 3) Clean παλιά αρχεία ΜΟΝΟ στο deploy
+Write-Host "Cleaning old files in $DEPLOY_BRANCH..."
+Get-ChildItem -Force | Where-Object { $_.Name -notin @('.git') } | Remove-Item -Recurse -Force
+
+# 4) Copy build output από το main working dir (ίδιο folder)
+Write-Host "Copying build files..."
+Copy-Item -Recurse -Force "$BUILD_DIR\*" .
+
+# 5) Add .nojekyll (για ασφάλεια assets)
+Write-Host "Adding .nojekyll..."
+New-Item -ItemType File -Force -Name ".nojekyll" | Out-Null
+
+# 6) Commit & Push
+Write-Host "Committing and pushing..."
+git add -A
+if (git diff --cached --quiet) {
+    Write-Host "No changes to deploy."
+} else {
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss UTC"
+    git commit -m "Deploy $timestamp"
+    git push origin $DEPLOY_BRANCH
+}
+
+# 7) Back to main
+Write-Host "Returning to $MAIN_BRANCH..."
 git checkout $MAIN_BRANCH
 
-Write-Host ""
-Write-Host "✅ Deployment complete!"
-Write-Host "🌍 Your site should be live at:"
-Write-Host "https://pitsianisparaskevas.github.io/kp/"
-Write-Host "------------------------------------------"
+Write-Host "Deployment complete! https://pitsianisparaskevas.github.io/kp/"
